@@ -11,7 +11,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useCreateTicketMutation } from "@/api/ticketsApiSlice";
-import { useGetAllUsersQuery } from "@/api/usersApiSlice"; // Assuming you have this API slice
+import { useGetAllUsersQuery } from "@/api/usersApiSlice";
 
 export function CreateTicketDrawer() {
   const {
@@ -35,7 +35,7 @@ export function CreateTicketDrawer() {
       await createTicket({
         title: payload.title,
         desc: payload.description,
-        user: payload.user, // user should now be the userId, not the username
+        user: payload.user,
       });
 
       reset();
@@ -113,7 +113,7 @@ export function CreateTicketDrawer() {
               <option value="">Pilih User</option>
               {users.map((user) => (
                 <option key={user.id} value={user.id}>
-                  {user.username} {/* Display username */}
+                  {user.username}
                 </option>
               ))}
             </select>

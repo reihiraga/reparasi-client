@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 import { Switch } from "@headlessui/react";
 import { useGetAllTicketsQuery } from "@/api/ticketsApiSlice";
-import { useGetAllUsersQuery } from "@/api/usersApiSlice"; // Assuming you have a usersApiSlice
+import { useGetAllUsersQuery } from "@/api/usersApiSlice";
 import { memo } from "react";
 import { EditTicketDrawer } from "./EditTicketDrawer";
 
@@ -14,10 +14,9 @@ const Ticket = ({ ticketId, buttonRef, onStatusChange }) => {
   });
 
   const { user } = ticket;
-  // Fetch user data (assuming you have user data stored in usersApiSlice)
+
   const { data: usersData } = useGetAllUsersQuery("usersList");
 
-  // Retrieve username based on the user ID
   const username = usersData
     ? usersData.entities[user]?.username
     : "Unknown User";

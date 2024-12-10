@@ -21,7 +21,7 @@ import { ROLES } from "@/config/roles";
 
 export function EditUserDrawer({ selectedUser }) {
   const [selectedRoles, setSelectedRoles] = useState([]);
-  const [isActive, setIsActive] = useState(selectedUser?.active || false); // Local state for Switch
+  const [isActive, setIsActive] = useState(selectedUser?.active || false);
 
   const {
     register,
@@ -44,21 +44,23 @@ export function EditUserDrawer({ selectedUser }) {
         roles: selectedUser.roles,
         active: selectedUser.active,
       });
-      setIsActive(selectedUser.active); // Sync local state with selectedUser
+      setIsActive(selectedUser.active);
     }
   }, [selectedUser, reset]);
-
   const onSubmit = async (payload) => {
     try {
-      await updateUser({
+      const requestBody = {
         ...selectedUser,
         username: payload.username,
         roles: payload.roles,
-        active: isActive, // Use local state value
-      });
+        active: isActive,
+      };
+
+      console.log("Payload being sent:", requestBody);
+      await updateUser(requestBody).unwrap();
       reset();
     } catch (err) {
-      console.error("Failed to create user:", err);
+      console.error("Failed to update user:", err);
     }
   };
 
@@ -80,8 +82,8 @@ export function EditUserDrawer({ selectedUser }) {
   };
 
   const onStatusChange = (newStatus) => {
-    setIsActive(newStatus); // Update local state
-    setValue("active", newStatus); // Sync with form
+    setIsActive(newStatus);
+    setValue("active", newStatus);
   };
 
   return (
@@ -144,7 +146,7 @@ export function EditUserDrawer({ selectedUser }) {
           {/* roles */}
           <div>
             <label
-              htmlFor="role"
+              htmlFor="roles"
               className="block text-sm font-medium text-gray-700"
             >
               Role
@@ -154,7 +156,7 @@ export function EditUserDrawer({ selectedUser }) {
               {...register("roles")}
               className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
               multiple={true}
-              value={selectedRoles} // controlled component
+              value={selectedRoles}
               onChange={(e) =>
                 setSelectedRoles(
                   Array.from(e.target.selectedOptions, (opt) => opt.value)
@@ -173,14 +175,14 @@ export function EditUserDrawer({ selectedUser }) {
           {/* Status */}
           <div>
             <label
-              htmlFor="role"
+              htmlFor="active"
               className="block text-sm font-medium text-gray-700"
             >
               Status
             </label>
             <Switch
-              checked={isActive} // Use local state for checked value
-              onChange={onStatusChange} // Call onStatusChange when toggled
+              checked={isActive}
+              onChange={onStatusChange}
               className="group relative inline-flex h-6 w-11 mt-1 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-gray-200 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 data-[checked]:bg-indigo-600"
             >
               <span className="pointer-events-none relative inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out group-data-[checked]:translate-x-5" />
@@ -193,7 +195,7 @@ export function EditUserDrawer({ selectedUser }) {
               type="button"
               onClick={handleDelete}
               className="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-red-500 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-              disabled={isDeleting} // Disable while deleting
+              disabled={isDeleting}
             >
               {isDeleting ? "Deleting..." : "Delete User"}
             </button>

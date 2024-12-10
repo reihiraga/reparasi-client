@@ -50,7 +50,7 @@ const ticketsApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: [{ type: "Ticket", id: "LIST" }],
     }),
     updateTicket: builder.mutation({
-      query: ({ newTicketData }) => ({
+      query: (newTicketData) => ({
         url: "/tickets",
         method: "PATCH",
         headers: {
@@ -60,6 +60,7 @@ const ticketsApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: (result, error, arg) => [{ type: "Ticket", id: arg.id }],
     }),
+
     deleteTicket: builder.mutation({
       query: ({ id }) => ({
         url: "/tickets",

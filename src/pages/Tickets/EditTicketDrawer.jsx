@@ -2,6 +2,7 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { Switch } from "@headlessui/react";
 import { FiEdit } from "react-icons/fi";
 import {
   useUpdateTicketMutation,
@@ -19,63 +20,61 @@ import {
 } from "@/components/ui/sheet";
 
 export function EditTicketDrawer({ selectedTicket }) {
-  const [selectedUsers, setSelectedUsers] = useState(
-    Array.isArray(selectedTicket.user) ? selectedTicket.user : []
-  );
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const { data: usersData } = useGetAllUsersQuery("usersList");
+  const users = usersData ? Object.values(usersData.entities) : [];
+  const [isFixed, setIsFixed] = useState(selectedTicket?.isFixed || false);
 
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      title: selectedTicket.title || "",
-      desc: selectedTicket.desc || "",
-      user: Array.isArray(selectedTicket.user) ? selectedTicket.user : [],
-      isFixed: selectedTicket.isFixed || false,
-      username: selectedTicket.username || "", // Set initial username
+      selectedTicket,
     },
   });
 
   const [updateTicket, { isLoading, isSuccess, isError, error }] =
     useUpdateTicketMutation();
 
-  const { data: usersData } = useGetAllUsersQuery("usersList");
-  const users = usersData ? Object.values(usersData.entities) : [];
-
   useEffect(() => {
     if (selectedTicket) {
       reset({
-        title: selectedTicket.title || "",
-        desc: selectedTicket.desc || "",
-        user: Array.isArray(selectedTicket.user) ? selectedTicket.user : [],
-        isFixed: selectedTicket.isFixed || false,
-        username: selectedTicket.username || "", // Reset username when ticket changes
+        title: selectedTicket.title,
+        desc: selectedTicket.desc,
+        user: selectedTicket.user,
+        isFixed: selectedTicket.isFixed,
+        username: selectedTicket.username,
       });
+      setIsFixed(selectedTicket.isFixed);
+      setSelectedUsers([selectedTicket.user]);
     }
   }, [selectedTicket, reset]);
 
   const onSubmit = async (payload) => {
     try {
-      await updateTicket({
+      // Map selected user IDs to usernames
+      const selectedUsernames = selectedUsers
+        .map((userId) => {
+          const user = users.find((u) => u.id === userId);
+          return user ? user.username : null;
+        })
+        .filter(Boolean);
+
+      const requestBody = {
         ...selectedTicket,
         title: payload.title,
         desc: payload.desc,
-        user: selectedUsers,
-        isFixed: payload.isFixed,
-        username: payload.username, // Use the submitted username
-      })
-        .then((response) => {
-          console.log("Ticket created:", response);
-        })
-        .catch((error) => {
-          console.error("API Error:", error);
-          if (error.response) {
-            console.error("Response Data:", error.response.data);
-          }
-        });
-      console.log(payload);
+        user: selectedUsers.join(","),
+        isFixed,
+        username: selectedUsernames.join(","),
+      };
+
+      console.log("Payload being sent:", requestBody);
+      await updateTicket(requestBody);
       reset();
     } catch (err) {
       console.error("Failed to update ticket:", err);
@@ -97,6 +96,11 @@ export function EditTicketDrawer({ selectedTicket }) {
         console.error("Failed to delete ticket:", err);
       }
     }
+  };
+
+  const onStatusChange = (newFixed) => {
+    setIsFixed(newFixed);
+    setValue("active", newFixed);
   };
 
   return (
@@ -144,6 +148,7 @@ export function EditTicketDrawer({ selectedTicket }) {
               Description
             </label>
             <textarea
+              type="text"
               id="description"
               {...register("desc")}
               className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
@@ -158,18 +163,47 @@ export function EditTicketDrawer({ selectedTicket }) {
           {/* Username */}
           <div>
             <label
-              htmlFor="username"
+              htmlFor="user"
               className="block text-sm font-medium text-gray-700"
             >
               Username
             </label>
-            <input
+            <select
               type="text"
-              id="username"
-              {...register("username")}
+              id="user"
+              {...register("user")}
               className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-              disabled={!selectedTicket.username} // Make it non-editable if username shouldn't change
-            />
+              value={selectedUsers.join(",")}
+              onChange={(e) => {
+                const value = e.target.value.split(",");
+                setSelectedUsers(value);
+              }}
+            >
+              <option value="">Pilih User</option>
+              {users.map((user) => (
+                <option key={user.id} value={user.id}>
+                  {user.username}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Is Fixed */}
+          <div>
+            <label
+              htmlFor="fixed"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Is Fixed
+            </label>
+            <Switch
+              id="fixed"
+              checked={isFixed}
+              onChange={onStatusChange}
+              className="group relative inline-flex h-6 w-11 mt-1 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-gray-200 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 data-[checked]:bg-indigo-600"
+            >
+              <span className="pointer-events-none relative inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out group-data-[checked]:translate-x-5" />
+            </Switch>
           </div>
 
           {/* Save and Delete Buttons */}
