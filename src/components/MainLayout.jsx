@@ -1,3 +1,4 @@
+import { Toaster } from "sonner";
 import { Outlet } from "react-router-dom";
 
 import { Header } from "./Header";
@@ -11,6 +12,7 @@ const MainLayout = () => {
         <Navbar />
         <main className="flex-1 p-6 bg-gray-100">
           <Outlet />
+          <Toaster />
         </main>
       </div>
     </div>
