@@ -35,7 +35,6 @@ export const TicketsList = () => {
   if (isSuccess) {
     const { ids, entities } = ticketsData;
 
-    // Apply search and filter
     const filteredTickets = ids.filter((ticketId) => {
       const ticket = entities[ticketId];
       const matchesSearch = ticket.title
