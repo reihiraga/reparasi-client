@@ -44,19 +44,26 @@ export const Login = () => {
   };
 
   return (
-    <div>
-      <div>
-        <h2>Login ke Reparasi APL</h2>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
+        <h2 className="mb-6 text-2xl font-bold text-center text-gray-800">
+          Login ke Reparasi Si Budi
+        </h2>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          {/* username */}
-          <div>
-            <label htmlFor="username">Username</label>
+          {/* Username */}
+          <div className="mb-4">
+            <label
+              htmlFor="username"
+              className="block mb-1 text-sm font-medium text-gray-700"
+            >
+              Username
+            </label>
             <input
               type="text"
               id="username"
               {...register("username", { required: true })}
-              className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
             />
             {errors.username && (
               <p className="mt-1 text-sm text-red-600">
@@ -65,14 +72,19 @@ export const Login = () => {
             )}
           </div>
 
-          {/* password */}
-          <div>
-            <label htmlFor="password">Password</label>
+          {/* Password */}
+          <div className="mb-6">
+            <label
+              htmlFor="password"
+              className="block mb-1 text-sm font-medium text-gray-700"
+            >
+              Password
+            </label>
             <input
               type="password"
               id="password"
               {...register("password", { required: true })}
-              className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
             />
             {errors.password && (
               <p className="mt-1 text-sm text-red-600">
@@ -81,10 +93,10 @@ export const Login = () => {
             )}
           </div>
 
-          {/* button */}
+          {/* Button */}
           <button
             type="submit"
-            className="flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+            className="w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
             disabled={isSubmitting}
           >
             {isSubmitting ? "Signing in..." : "Sign in"}

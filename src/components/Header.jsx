@@ -6,7 +6,7 @@ export const Header = () => {
       <div className="px-4 py-4 mx-auto sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold text-gray-900">
-            Toko Reparasi APL
+            Toko Reparasi Si Budi
           </h1>
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">

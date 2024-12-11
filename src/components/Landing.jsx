@@ -10,7 +10,7 @@ const Landing = () => {
             <div className="flex items-center space-x-2">
               <FileText className="w-8 h-8 text-blue-600" />
               <h1 className="text-2xl font-bold text-gray-900">
-                Toko Reparasi APL
+                Toko Reparasi Si Budi
               </h1>
             </div>
             <Link
@@ -27,7 +27,7 @@ const Landing = () => {
       <main className="px-4 py-12 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div className="text-center">
           <h2 className="mb-4 text-4xl font-bold text-gray-900">
-            Selamat datang di Toko Reparasi APL
+            Selamat datang di Toko Reparasi Si Budi
           </h2>
           <p className="mb-8 text-xl text-gray-600">
             Cara yang aman dan efisien untuk memperbaiki perangkat Anda!
@@ -41,7 +41,7 @@ const Landing = () => {
               <p>
                 <span className="font-medium">Email:</span>{" "}
                 <a href="mailto:support@notes.com" className="text-blue-600">
-                  repair@metrodata.academy
+                  repair@sibudi.com
                 </a>
               </p>
               <p>
